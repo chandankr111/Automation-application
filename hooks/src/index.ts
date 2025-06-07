@@ -14,6 +14,8 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
     const body = req.body;
 
     // store in db a new trigger
+
+    console.log("Received webhook for user", userId, "zap", zapId, "with body", body);
     await client.$transaction(async tx => {
         const run = await tx.zapRun.create({
             data: {
@@ -21,7 +23,7 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
                 metadata: body
             }
         });;
-
+   console.log("Created zap run", run);
         await tx.zapRunOutbox.create({
             data: {
                 zapRunId: run.id
